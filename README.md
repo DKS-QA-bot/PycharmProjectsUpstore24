@@ -40,3 +40,11 @@ main_project/
 │ ├── requirements.txt# Список зависимостей Python 
 ├── .gitignore # Файлы, исключенные из Git 
 └── README.md # Этот файл
+
+
+## 🚀 Установка и запуск
+
+### 1. Клонирование репозитория
+```bash
+git clone https://github.com/DKS-QA-bot/PycharmProjectsUpstore24.git
+cd PycharmProjectsUpstore24
