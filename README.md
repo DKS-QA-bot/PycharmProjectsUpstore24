@@ -15,3 +15,4 @@
   * **Ожидания:** WebDriverWait + Expected Conditions *
   * **Паттерн:** Page Object Model (POM) *
   * **Управление зависимостями:** pip (requirements.txt) * **VCS:** Git
+main_project/ ├── base/ # Базовые классы │ └── base_class.py # Базовый класс Page с общими методами (ожидания, скриншоты) │ ├── pages/ # Классы страниц (Page Objects) │ ├── main_page.py # Главная страница │ ├── login_page.py # Страница авторизации │ ├── cart_page.py # Страница корзины │ ├── heart_page.py # Страница "Избранное" │ └── compare_page.py # Страница сравнения товаров │ ├── tests/ # Тест-кейсы (рекомендуется) │ ├── config/ # Конфигурационные файлы (URL, данные пользователей) │ ├── requirements.txt # Список зависимостей Python ├── .gitignore # Файлы, исключенные из Git └── README.md # Этот файл
