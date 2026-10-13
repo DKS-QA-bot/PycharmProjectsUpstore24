@@ -48,3 +48,7 @@ main_project/
 ```bash
 git clone https://github.com/DKS-QA-bot/PycharmProjectsUpstore24.git
 cd PycharmProjectsUpstore24
+
+👨‍💻 Автор
+
+Dmitry Kryukov
