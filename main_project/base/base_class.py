@@ -5,7 +5,12 @@ class Base():
     """ Базовый класс, содержащий универсальные методы """
 
     def __init__(self,driver):
-        self.driver =driver
+        self.driver = driver
+
+
+    def init_driver(self):
+        """Методинициализации драйвера"""
+
 
     def get_current_url(self):
         """Метод проверки url"""
@@ -20,6 +25,7 @@ class Base():
         print('Good value word')
 
     def assert_url(self,result):
+        """Method assert url"""
         get_url = self.driver.current_url
         assert get_url == result
         print('Good value url')

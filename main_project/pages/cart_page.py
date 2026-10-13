@@ -18,18 +18,15 @@ class Cart_page(Base):
         # Инициализация явного ожидания с таймаутом 30 секунд
         self.wait = WebDriverWait(self.driver, 30)
 
-    # Локаторы (Locators)
-    # Используются относительные XPath-выражения для поиска элементов на странице.
-    # Индексы [1] и [2] указывают на первый и второй элементы в списке соответственно.
+    # Locators
+
     section_title_kart = '(//*[@class="section__title"])[1]'
     cart_item_title = '(//*[@class="cart-item__title"])[1]'
     cart_item_title_1 = '(//*[@class="cart-item__title"])[2]'
     cart_item_total_price = '(//*[@data-cart-item-total-price])[1]'
     cart_item_total_price_1 = '(//*[@data-cart-item-total-price])[2]'
 
-    # Геттеры (Getters)
-    # Методы для получения текста из элементов.
-    # Используют явное ожидание видимости элемента перед обращением к .text.
+    # Getters
 
     def get_cart_item_total_price_1(self):
         """Возвращает текст общей цены второго товара в корзине."""
@@ -61,15 +58,11 @@ class Cart_page(Base):
             EC.visibility_of_element_located((By.XPATH, self.cart_item_title_1))
         ).text
 
-    # Проверки (Assertions)
-    # Методы для валидации данных на странице.
-    # Используют assert для прерывания теста при несовпадении и print для логирования в консоль.
+    #  Action
 
     def assert_section_title_kart(self):
         """
         Проверяет, что заголовок страницы соответствует слову 'Корзина'.
-        Срез [:self.get_section_title_kart().rindex('а')+1] используется для отсечения
-        возможных дополнительных слов в заголовке (например, 'Корзина товаров').
         """
         assert self.get_section_title_kart()[:self.get_section_title_kart().rindex('а') + 1] == "Корзина"
         print("Вы находитесь в корзине\n")
@@ -114,9 +107,8 @@ class Cart_page(Base):
         print(
             f"Цена на товар 2 с главной страницы - {price_1} совпадает с ценой товара на странице корзины - {self.get_cart_item_total_price_1()} success\n")
 
-    # Сценарный метод (Composite Action)
-    # Объединяет последовательность проверок в один вызов для удобства использования в тестах.
 
+    # Method
     def assert_product_cart(self, prod, prod1, price, price_1):
         """
         Выполняет полную проверку состояния корзины: URL, заголовок, названия товаров и их цены.
@@ -132,5 +124,5 @@ class Cart_page(Base):
         self.assert_cart_1(prod1)
         self.assert_price_cart(price)
         self.assert_price_cart_1(price_1)
-        bc = Base(self.driver)
-        bc.get_screenshot()
+
+        self.get_screenshot()

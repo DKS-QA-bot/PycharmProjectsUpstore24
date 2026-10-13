@@ -11,29 +11,28 @@ class Login_page(Base):
     # В тестах может потребоваться переопределить на конкретный URL страницы входа (например, '/login').
     url = 'https://upstore24.ru/'
 
-    def __init__(self, driver):
+    def __init__(self,driver):
+        self.driver = driver
         """
         Инициализация страницы авторизации.
 
         :param driver: Экземпляр WebDriver.
         """
-        super().__init__(driver)
-        self.driver = driver
+        super().__init__(self.driver)
+
         # Инициализация явного ожидания с таймаутом 30 секунд
         self.wait = WebDriverWait(self.driver, 30)
 
-    # Локаторы (Locators)
-    # XPath и CSS-селекторы для поиска элементов на странице входа.
+    # Locators
+
     user_icon = '(//span[@data-icon="user"])[1]'
     user_email = '//*[@id="input-15"]'
     button_continue = '//button[@type="button"]'
     password = '//input[@type="password"]'
     button_enter = '//button[normalize-space()="Войти"]'
 
-    # Геттеры (Getters)
-    # Методы для получения доступа к веб-элементам.
-    # Используют ожидание кликабельности (element_to_be_clickable), чтобы убедиться,
-    # что элемент не только виден, но и с ним можно взаимодействовать.
+    # Getters
+
 
     def get_button_enter(self):
         """Возвращает кликабельный элемент кнопки 'Войти'."""
@@ -55,8 +54,8 @@ class Login_page(Base):
         """Возвращает кликабельную кнопку 'Продолжить' (после ввода email)."""
         return self.wait.until(EC.element_to_be_clickable((By.XPATH, self.button_continue)))
 
-    # Действия (Actions)
-    # Методы для взаимодействия с элементами (клики, ввод текста).
+    # Actions
+
 
     def click_button_enter(self):
         """Выполняет клик по кнопке 'Войти'."""
@@ -91,8 +90,8 @@ class Login_page(Base):
         self.get_password().send_keys(password)
         print("Input password")
 
-    # Сценарный метод (Composite Action)
-    # Объединяет последовательность шагов авторизации в один вызов.
+    # Method
+
 
     def authorization(self):
         """
@@ -104,14 +103,15 @@ class Login_page(Base):
         5. Нажимает кнопку продолжения.
         6. Вводит жестко заданный пароль.
         7. Нажимает кнопку входа.
+        Метод только имитирует вход в личный кабинет, так как проект учебный
         """
         self.driver.get(self.url)
         self.driver.maximize_window()
         self.get_current_url()
         self.click_user_icon()
-        self.input_user_email('dmitrij.kryukov.1986@list.ru')
+        self.input_user_email('ragobom@ogzmail.com')
         self.click_go()
         self.input_password('*****')
         self.click_button_enter()
-        bc = Base(self.driver)
-        bc.get_screenshot()
+
+        self.get_screenshot()
