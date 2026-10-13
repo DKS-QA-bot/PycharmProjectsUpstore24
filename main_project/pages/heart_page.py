@@ -1,70 +1,148 @@
-from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from main_project.base.base_class import Base
-
-class Client_information_page(Base):
-    """ Класс содержащий локаторы и методы для страницы Авторизации"""
+from main_project.pages.main_page import Main_page
 
 
+class Heart_page(Base):
+    """
+    Класс, содержащий локаторы и методы для страницы 'Избранное' (Wishlist/Heart).
+    Наследуется от базового класса Base.
+    """
 
+    def __init__(self, driver):
+        """
+        Инициализация страницы избранного.
 
-
-    def __init__(self,driver):
+        :param driver: Экземпляр WebDriver.
+        """
         super().__init__(driver)
         self.driver = driver
+        # Инициализация явного ожидания с таймаутом 30 секунд
         self.wait = WebDriverWait(self.driver, 30)
 
+    # Локаторы (Locators)
+    # XPath-выражения для поиска элементов на странице избранного.
+    # Индексы [1] и [2] указывают на первый и второй элементы в списке товаров.
+    alert_info = '//*[@class="alert-info__text"]'
+    product_card_title_heart = '(//*[@class="product-card__title"])[1]'
+    product_card_title_heart_1 = '(//*[@class="product-card__title"])[2]'
+    card_price_from_heart = '(//*[@data-product-card-price-from-cart])[1]'
+    card_price_from_heart_1 = '(//*[@data-product-card-price-from-cart])[2]'
 
+    # Геттеры (Getters)
+    # Методы для получения текста из элементов с использованием явного ожидания.
 
-    #locators
-    first_name = '//input[@id="first-name"]'
-    last_name = '//input[@id="last-name"]'
-    postal_code = '//input[@id="postal-code"]'
-    button_continue = '//input[@data-test="continue"]'
+    def get_product_card_title_heart(self):
+        """Возвращает название первого товара в избранном."""
+        return self.wait.until(
+            EC.visibility_of_element_located((By.XPATH, self.product_card_title_heart))
+        ).text
 
+    def get_product_card_title_heart_1(self):
+        """Возвращает название второго товара в избранном."""
+        return self.wait.until(
+            EC.visibility_of_element_located((By.XPATH, self.product_card_title_heart_1))
+        ).text
 
-    #Getters
-    def get_first_name(self):
-        return self.wait.until(EC.element_to_be_clickable((By.XPATH, self.first_name)))
+    def get_alert_info(self):
+        """Возвращает текст информационного сообщения (алерта) на странице."""
+        return self.wait.until(
+            EC.visibility_of_element_located((By.XPATH, self.alert_info))
+        ).text
 
-    def get_last_name(self):
-        return self.wait.until(EC.element_to_be_clickable((By.XPATH, self.last_name)))
+    def get_card_price_from_heart(self):
+        """Возвращает цену первого товара в избранном."""
+        return self.wait.until(
+            EC.visibility_of_element_located((By.XPATH, self.card_price_from_heart))
+        ).text
 
-    def get_postal_code(self):
-        return self.wait.until(EC.element_to_be_clickable((By.XPATH,self.postal_code)))
+    def get_card_price_from_heart_1(self):
+        """Возвращает цену второго товара в избранном."""
+        return self.wait.until(
+            EC.visibility_of_element_located((By.XPATH, self.card_price_from_heart_1))
+        ).text
 
-    def get_button_continue(self):
-        return self.wait.until(EC.element_to_be_clickable((By.XPATH,self.button_continue)))
+    # Проверки (Assertions)
+    # Методы для валидации данных. Используют assert для прерывания теста при ошибке.
 
+    def assert_alert_info(self):
+        """
+        Проверяет наличие и текст информационного сообщения об ограничении
+        количества товаров в избранном (не более 20).
+        """
+        assert self.get_alert_info() == 'Обратите внимание! Добавить в избранное можно не более 20 товаров. Чтобы сохранить подборку, авторизуйтесь в личном кабинете.'
+        print("Вы на странице избранное\n")
 
-    #Actions
-    def input_first_name(self,first_name):
-        self.get_first_name().send_keys(first_name)
-        print("Input first name")
+    def assert_card_price_from_heart(self, price):
+        """
+        Проверяет цену первого товара.
+        Внимание: в теле метода используется геттер второго товара (get_card_price_from_heart_1).
+        Это может быть логической ошибкой, если предполагалась проверка первого товара.
+        """
+        assert self.get_card_price_from_heart_1() == price
+        print(
+            f"Цена на товар 1 с главной страницы - {price} совпадает с ценой товара на странице избранного - {self.get_card_price_from_heart_1()} success\n")
 
+    def assert_card_price_from_heart_1(self, price_1):
+        """
+        Проверяет цену второго товара.
+        Внимание: в теле метода используется геттер первого товара (get_card_price_from_heart).
+        Это может быть логической ошибкой, если предполагалась проверка второго товара.
+        """
+        assert self.get_card_price_from_heart() == price_1
+        print(
+            f"Цена на товар 2 с главной страницы - {price_1} совпадает с ценой товара на странице избранного - {self.get_card_price_from_heart()} success\n")
 
-    def input_last_name(self,last_name):
-        self.get_last_name().send_keys(last_name)
-        print("Input last name")
+    def click_toolbar_compare(self):
+        """
+        Переход на страницу сравнения товаров через шапку сайта.
+        Создает экземпляр главной страницы и вызывает метод клика по кнопке сравнения.
+        """
+        mp = Main_page(self.driver)
+        mp.click_toolbar_compare()
+        print("Click toolbar compare\n")
 
+    def assert_product_heart(self, prod):
+        """
+        Проверяет название первого товара.
+        Внимание: в теле метода используется геттер второго товара (get_product_card_title_heart_1).
+        Это может быть логической ошибкой, если предполагалась проверка первого товара.
+        """
+        assert self.get_product_card_title_heart_1() == prod
+        print(
+            f"выбранный товар 1 - {self.get_product_card_title_heart_1()} с главной страницы совпадает с выбранным товаром на странице избранного - {prod} success\n")
 
-    def input_postal_code(self,postal_code):
-        self.get_postal_code().send_keys(postal_code)
-        print("Input postal code")
+    def assert_product_heart_1(self, prod_1):
+        """
+        Проверяет название второго товара.
+        Внимание: в теле метода используется геттер первого товара (get_product_card_title_heart).
+        Это может быть логической ошибкой, если предполагалась проверка второго товара.
+        """
+        assert self.get_product_card_title_heart() == prod_1
+        print(
+            f"выбранный товар 2 - {self.get_product_card_title_heart()} с главной страницы совпадает с выбранным товаром на странице избранного - {prod_1} success\n")
 
-    def click_button_continue(self):
-        self.get_button_continue().click()
-        print("Click continue button")
+    # Сценарный метод (Composite Action)
+    # Объединяет последовательность действий в один вызов для тест-кейса.
 
+    def assert_heart_page(self, price, price_1, prod, prod1):
+        """
+        Выполняет полную проверку страницы избранного: URL, алерт, названия и цены товаров,
+        а затем переходит на страницу сравнения.
 
-
-    #Method
-    def input_information(self):
-
+        :param price: Ожидаемая цена (проверяется вторым товаром из-за ошибки в коде).
+        :param price_1: Ожидаемая цена (проверяется первым товаром из-за ошибки в коде).
+        :param prod: Ожидаемое название (проверяется вторым товаром из-за ошибки в коде).
+        :param prod1: Ожидаемое название (проверяется первым товаром из-за ошибки в коде).
+        """
         self.get_current_url()
-        self.input_first_name('Ivan')
-        self.input_last_name('Ivanov')
-        self.input_postal_code('1234')
-        self.click_button_continue()
+        self.assert_alert_info()
+        self.assert_product_heart(prod)
+        self.assert_product_heart_1(prod1)
+        self.assert_card_price_from_heart(price)
+        self.assert_card_price_from_heart_1(price_1)
+        self.click_toolbar_compare()
+        bc = Base(self.driver)
+        bc.get_screenshot()
