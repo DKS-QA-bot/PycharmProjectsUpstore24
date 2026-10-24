@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import allure
 from main_project.base.base_class import Base
+from main_project.utilites.logger import Logger
 
 
 class Cart_page(Base):
@@ -118,11 +120,14 @@ class Cart_page(Base):
         :param price: Ожидаемая цена первого товара.
         :param price_1: Ожидаемая цена второго товара.
         """
-        self.get_current_url()
-        self.assert_section_title_kart()
-        self.assert_cart(prod)
-        self.assert_cart_1(prod1)
-        self.assert_price_cart(price)
-        self.assert_price_cart_1(price_1)
+        with allure.step("assert_product_cart"):
+            Logger.add_start_step(method="assert_product_cart")
+            self.get_current_url()
+            self.assert_section_title_kart()
+            self.assert_cart(prod)
+            self.assert_cart_1(prod1)
+            self.assert_price_cart(price)
+            self.assert_price_cart_1(price_1)
 
-        self.get_screenshot()
+            self.get_screenshot()
+            Logger.add_end_step(url=self.get_current_url(),method="assert_product_cart")

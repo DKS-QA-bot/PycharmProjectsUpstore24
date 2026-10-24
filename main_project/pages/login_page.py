@@ -2,7 +2,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from main_project.base.base_class import Base
-
+from main_project.utilites.logger import Logger
+import allure
 
 class Login_page(Base):
     """Класс, содержащий локаторы и методы для страницы Авторизации."""
@@ -105,13 +106,16 @@ class Login_page(Base):
         7. Нажимает кнопку входа.
         Метод только имитирует вход в личный кабинет, так как проект учебный
         """
-        self.driver.get(self.url)
-        self.driver.maximize_window()
-        self.get_current_url()
-        self.click_user_icon()
-        self.input_user_email('ragobom@ogzmail.com')
-        self.click_go()
-        self.input_password('*****')
-        self.click_button_enter()
+        with allure.step("authorization"):
+            Logger.add_start_step(method='authorization')
+            self.driver.get(self.url)
+            self.driver.maximize_window()
+            self.get_current_url()
+            self.click_user_icon()
+            self.input_user_email('ragobom@ogzmail.com')
+            self.click_go()
+            self.input_password('*****')
+            self.click_button_enter()
 
-        self.get_screenshot()
+            self.get_screenshot()
+            Logger.add_end_step(url=self.get_current_url(),method='authorization')

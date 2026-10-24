@@ -4,8 +4,9 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+import allure
 from main_project.base.base_class import Base
+from main_project.utilites.logger import Logger
 
 
 class Catalog_page(Base):
@@ -589,64 +590,66 @@ class Catalog_page(Base):
 
         :return: tuple (название_товара_1, название_товара_2, цена_товара_1, цена_товара_2)
         """
-        self.driver.get(self.url)
-        self.driver.maximize_window()
-        self.get_current_url()
+        with allure.step("select product"):
+            Logger.add_start_step(method="select_product")
+            self.driver.get(self.url)
+            self.driver.maximize_window()
+            self.get_current_url()
 
-        self.click_select_hamburger()
-        self.click_select_pc()
+            self.click_select_hamburger()
+            self.click_select_pc()
 
-        self.select_price_min()
-        self.select_price_max()
+            self.select_price_min()
+            self.select_price_max()
 
-        self.click_checkbox_apple()
-        self.click_to_checkbox_silver()
-        self.click_filter_count()
-        self.click_filter_ram()
+            self.click_checkbox_apple()
+            self.click_to_checkbox_silver()
+            self.click_filter_count()
+            self.click_filter_ram()
 
-        self.move_to_window_dawn()
+            self.move_to_window_dawn()
 
-        self.click_platform()
-        self.click_processor()
-        self.click_graphics()
+            self.click_platform()
+            self.click_processor()
+            self.click_graphics()
 
-        self.move_to_window_dawn()
+            self.move_to_window_dawn()
 
-        self.click_display_type()
-        self.click_size_display()
-        self.click_diagonal()
-        self.click_filter_count()
+            self.click_display_type()
+            self.click_size_display()
+            self.click_diagonal()
+            self.click_filter_count()
 
-        self.click_by_default()
-        self.click_by_size_sale()
-
-
-        bc = Base(self.driver)
-        bc.get_screenshot()
-        # Получение данных первого (индекс 1) и второго (индекс 2) товаров и их цен
-        prod1 = self.get_product_card_title()
-        prod = self.get_product_card_title_1()
-        card_price = self.get_card_price()
-        card_price_1 = self.get_card_price_1()
+            self.click_by_default()
+            self.click_by_size_sale()
 
 
-        self.click_icon_heart()
-        time.sleep(self.sleep)
-        self.click_compare()
-        time.sleep(self.sleep)
-        self.click_icon_heart()
-        time.sleep(self.sleep)
-        self.click_compare()
+            bc = Base(self.driver)
+            bc.get_screenshot()
+            # Получение данных первого (индекс 1) и второго (индекс 2) товаров и их цен
+            prod1 = self.get_product_card_title()
+            prod = self.get_product_card_title_1()
+            card_price = self.get_card_price()
+            card_price_1 = self.get_card_price_1()
 
-        self.click_fast_see_1()
-        self.click_in_cart()
-        self.click_back()
 
-        self.click_arrow_to_right()
-        self.click_in_cart_1()
-        self.click_back()
+            self.click_icon_heart()
+            time.sleep(self.sleep)
+            self.click_compare()
+            time.sleep(self.sleep)
+            self.click_icon_heart()
+            time.sleep(self.sleep)
+            self.click_compare()
 
-        self.click_fancybox_close()
-        self.click_icon_heart_main()
+            self.click_fast_see_1()
+            self.click_in_cart()
+            self.click_back()
 
-        return prod1, prod, card_price, card_price_1
+            self.click_arrow_to_right()
+            self.click_in_cart_1()
+            self.click_back()
+
+            self.click_fancybox_close()
+            self.click_icon_heart_main()
+            Logger.add_end_step(url=self.get_current_url(),method="select_product")
+            return prod1, prod, card_price, card_price_1

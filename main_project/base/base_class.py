@@ -1,6 +1,6 @@
 import datetime
 from pathlib import Path
-
+import allure
 class Base():
     """ Базовый класс, содержащий универсальные методы """
 
@@ -16,6 +16,7 @@ class Base():
         """Метод проверки url"""
         get_url = self.driver.current_url
         print(f"Current url {get_url}")
+        return get_url
 
 
     def assert_word(self, word, result):

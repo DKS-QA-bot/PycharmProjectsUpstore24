@@ -1,9 +1,10 @@
-
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from main_project.base.base_class import Base
 from main_project.pages.catalog_page import Catalog_page
+from main_project.utilites.logger import Logger
 
 
 class Compare_page(Base):
@@ -149,18 +150,21 @@ class Compare_page(Base):
         :param price: Ожидаемая цена второго товара.
         :param price_1: Ожидаемая цена первого товара.
         """
-        self.get_current_url()
-        self.assert_product(prod)
-        self.assert_product_1(prod1)
-        self.click_button_similar()
-        self.assert_compare_product_price(price)
-        self.assert_compare_product_price_1(price_1)
+        with allure.step("product_compare"):
+            Logger.add_start_step(method="product_compare")
+            self.get_current_url()
+            self.assert_product(prod)
+            self.assert_product_1(prod1)
+            self.click_button_similar()
+            self.assert_compare_product_price(price)
+            self.assert_compare_product_price_1(price_1)
 
-        # Создание скриншота через базовый класс
+            # Создание скриншота через базовый класс
 
-        self.get_screenshot()
+            self.get_screenshot()
 
-        # Переход в корзину через главную страницу
-        mp = Catalog_page(self.driver)
-        mp.click_toolbar_in_cart()
+            # Переход в корзину через главную страницу
+            mp = Catalog_page(self.driver)
+            mp.click_toolbar_in_cart()
+            Logger.add_end_step(url=self.get_current_url(),method="product_compare")
 

@@ -3,6 +3,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from main_project.base.base_class import Base
 from main_project.pages.catalog_page import Catalog_page
+import allure
+
+from main_project.utilites.logger import Logger
 
 
 class Heart_page(Base):
@@ -120,12 +123,15 @@ class Heart_page(Base):
         :param prod: Ожидаемое название.
         :param prod1: Ожидаемое название.
         """
-        self.get_current_url()
-        self.assert_alert_info()
-        self.assert_product_heart(prod)
-        self.assert_product_heart_1(prod1)
-        self.assert_card_price_from_heart(price)
-        self.assert_card_price_from_heart_1(price_1)
-        self.click_toolbar_compare()
+        with allure.step("Assert heart page"):
+            Logger.add_start_step(method="assert_heart_page")
+            self.get_current_url()
+            self.assert_alert_info()
+            self.assert_product_heart(prod)
+            self.assert_product_heart_1(prod1)
+            self.assert_card_price_from_heart(price)
+            self.assert_card_price_from_heart_1(price_1)
+            self.click_toolbar_compare()
 
-        self.get_screenshot()
+            self.get_screenshot()
+            Logger.add_end_step(url=self.get_current_url(), method='assert_heart_page')

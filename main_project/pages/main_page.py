@@ -1,5 +1,5 @@
 import time
-
+import allure
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -8,7 +8,7 @@ from main_project.base.base_class import Base
 from main_project.pages.catalog_page import Catalog_page
 from main_project.pages.compare_page import Compare_page
 from main_project.pages.heart_page import Heart_page
-
+from main_project.utilites.logger import Logger
 
 
 class Main_page(Base):
@@ -119,62 +119,64 @@ class Main_page(Base):
         """
 
         # 1. Подготовка: Переход в каталог и фильтрация
-        self.driver.get(self.cp.url)
-        self.driver.refresh()
+        with allure.step("Product main"):
+            Logger.add_start_step(method='product_main')
+            self.driver.get(self.cp.url)
+            self.driver.refresh()
 
-        self.move_window_dawn_main()
-        self.get_current_url()  # Метод вызывается, но результат никуда не сохраняется. Лишняя строка.
+            self.move_window_dawn_main()
+            self.get_current_url()  # Метод вызывается, но результат никуда не сохраняется. Лишняя строка.
 
-        self.click_button_all_products()
+            self.click_button_all_products()
 
-        # Применение фильтров через методы Catalog_page
-        self.cp.select_price_min()
-        self.cp.select_price_max()
-        self.cp.click_checkbox_apple()
-        self.click_color_burgundy()
+            # Применение фильтров через методы Catalog_page
+            self.cp.select_price_min()
+            self.cp.select_price_max()
+            self.cp.click_checkbox_apple()
+            self.click_color_burgundy()
 
-        self.cp.wait_for_all_elements()  # Ожидание загрузки товаров после фильтрации
+            self.cp.wait_for_all_elements()  # Ожидание загрузки товаров после фильтрации
 
-        self.move_window_dawn_main(500)
-        self.cp.click_filter_ram()
-        self.cp.click_filter_count()
-        self.cp.click_by_default()
-        self.cp.click_by_size_sale()
+            self.move_window_dawn_main(500)
+            self.cp.click_filter_ram()
+            self.cp.click_filter_count()
+            self.cp.click_by_default()
+            self.cp.click_by_size_sale()
 
-        # 2. Сбор данных о товарах для проверки
-        prod1 = self.cp.get_product_card_title()  # Название 1-го товара
-        prod = self.cp.get_product_card_title_1()  # Название 2-го товара
-        card_price = self.cp.get_card_price()  # Цена 1-го товара
-        card_price_1 = self.cp.get_card_price_1()  # Цена 2-го товара
+            # 2. Сбор данных о товарах для проверки
+            prod1 = self.cp.get_product_card_title()  # Название 1-го товара
+            prod = self.cp.get_product_card_title_1()  # Название 2-го товара
+            card_price = self.cp.get_card_price()  # Цена 1-го товара
+            card_price_1 = self.cp.get_card_price_1()  # Цена 2-го товара
 
-        print(f'Выбранный товар 1 - {prod}, цена - {card_price},\nВыбранный товар 2 - {prod1}, цена - {card_price_1}')
+            print(f'Выбранный товар 1 - {prod}, цена - {card_price},\nВыбранный товар 2 - {prod1}, цена - {card_price_1}')
 
-        # 3. Взаимодействие: Добавление в корзину и Избранное
-        self.click_in_cart_main()
-        self.click_in_cart_main_1()
-
-
-        self.cp.click_icon_heart()
-        time.sleep(self.cp.sleep)
-        self.cp.click_compare()
-
-        time.sleep(self.cp.sleep)
-        self.cp.click_icon_heart()
-        time.sleep(self.cp.sleep)
-        self.cp.click_compare()
-
-        self.cp.click_icon_heart_main()
-
-        # 4. Валидация (Проверки)
-        # Проверка страницы Избранного
-        self.hp.assert_heart_page(card_price_1, card_price, prod, prod1)
-
-        # Проверка страницы Сравнения
-        self.cmp.product_compare(prod, prod1, card_price_1, card_price)
+            # 3. Взаимодействие: Добавление в корзину и Избранное
+            self.click_in_cart_main()
+            self.click_in_cart_main_1()
 
 
-        self.get_screenshot()
+            self.cp.click_icon_heart()
+            time.sleep(self.cp.sleep)
+            self.cp.click_compare()
 
+            time.sleep(self.cp.sleep)
+            self.cp.click_icon_heart()
+            time.sleep(self.cp.sleep)
+            self.cp.click_compare()
+
+            self.cp.click_icon_heart_main()
+
+            # 4. Валидация (Проверки)
+            # Проверка страницы Избранного
+            self.hp.assert_heart_page(card_price_1, card_price, prod, prod1)
+
+            # Проверка страницы Сравнения
+            self.cmp.product_compare(prod, prod1, card_price_1, card_price)
+
+
+            self.get_screenshot()
+            Logger.add_end_step(url=self.get_current_url(), method='product_main')
 
 
 
